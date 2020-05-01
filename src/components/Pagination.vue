@@ -1,9 +1,5 @@
 <template>
-  <nav
-    class="mico-pagination"
-    :class="{ [`justify-content-${align}`]: !!align }"
-    :aria-label="ariaLabel"
-  >
+  <nav class="mico-pagination" :aria-label="ariaLabel">
     <ol v-show="pages.length > 0" class="pagination mb-0">
       <li class="first" :class="{ disabled: currentPage === 1 }">
         <a
@@ -71,7 +67,7 @@
 </template>
 
 <script>
-import { isVisible, propertyValidator, range } from '@/shared/utils';
+import { isVisible, range } from '@/shared/utils';
 
 function sanitizePerPage(value) {
   const perPage = parseInt(value, 10);
@@ -91,12 +87,6 @@ export default {
       type: Number,
       default: 1,
     },
-    align: {
-      type: String,
-      default: 'start',
-      validator: (value) =>
-        propertyValidator(value, ['around', 'center', 'between', 'end', 'start']),
-    },
     ariaLabel: {
       type: String,
       default: 'pagination',
@@ -109,42 +99,17 @@ export default {
       type: Number,
       default: 0,
     },
-    prevNextLinks: {
-      type: Boolean,
-      default: false,
-    },
-    prevText: {
-      type: String,
-      default: null,
-    },
-    nextText: {
-      type: String,
-      default: null,
-    },
     perPage: {
       type: Number,
       default: 10,
-    },
-    hideItemsCount: {
-      type: Boolean,
-      default: false,
-    },
-    itemsCountIntro: {
-      type: String,
-      default: 'Showing results',
-    },
-    hideItemsCountIntro: {
-      type: Boolean,
-      default: false,
     },
   },
 
   data() {
     return {
       currentPage: this.activePage,
-      isFirstPage: true,
-      isLastPage: false,
       pages: [],
+      pagePool: [],
     };
   },
 
@@ -163,7 +128,6 @@ export default {
   methods: {
     updatePages() {
       const result = Math.ceil(sanitizeTotalItems(this.totalItems) / sanitizePerPage(this.perPage));
-      console.log('updatePages', result);
       this.pagePool = result < 1 ? [1] : range(1, result);
 
       if (this.pagePool.length > 0) {
@@ -189,8 +153,6 @@ export default {
       if (index < firstPaginatedPage && index > firstPage) {
         this.pages = this.pagePool.slice(index, lastPage - 1);
       }
-      this.isFirstPage = index === firstPage;
-      this.isLastPage = index === lastPage;
 
       this.currentPage = index;
 

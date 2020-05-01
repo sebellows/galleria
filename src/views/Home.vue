@@ -101,7 +101,6 @@
 </template>
 
 <script>
-/* eslint-disable no-unused-vars */
 import Gallery from '@/components/Gallery';
 import GalleryThumbnail from '@/components/GalleryThumbnail';
 import IconSprite from '@/views/partials/IconSprite';
@@ -130,7 +129,9 @@ export function imageModelFactory(data = {}) {
   const description = descriptionContent._content ?? '';
   const dimensionsRE = /^width/g;
   const dimensions = Object.entries(params)
+    // eslint-disable-next-line no-unused-vars
     .filter(([k, v]) => dimensionsRE.test(k))
+    // eslint-disable-next-line no-unused-vars
     .sort(([k, v], [k2, v2]) => v - v2)
     .map(([k, v]) => {
       const suffix = k.split('_')[1];
@@ -156,7 +157,6 @@ export default {
   name: 'Home',
 
   components: {
-    // Autocomplete,
     Gallery,
     GalleryThumbnail,
     IconSprite,
@@ -220,7 +220,6 @@ export default {
     query: {
       handler(newVal, oldVal) {
         if (newVal !== oldVal) {
-          let params = {};
           if (newVal.length > 2) {
             this.fetchResults({ [this.filter]: newVal });
           } else if (oldVal?.length > 2 && newVal.length < oldVal.length) {
@@ -257,7 +256,7 @@ export default {
           }
           return response.json();
         })
-        .then(({ totalPhotos, pages, photos, message }) => {
+        .then(({ totalPhotos, pages, photos }) => {
           this.pages = pages;
           this.totalImages = totalPhotos;
           this.imageCount = photos?.length || 0;
@@ -280,7 +279,7 @@ export default {
         this.images = [];
       }
       const images = data.map(imageModelFactory);
-      images.forEach(async (image, i) => {
+      images.forEach(async (image) => {
         const cachedImage = await this.$ls.get(`${image.id}`);
         if (isDefined(cachedImage) && cachedImage instanceof Promise === false) {
           this.images.push(cachedImage);
@@ -301,7 +300,7 @@ export default {
       }
       if (this.openDialog) this.openDialog = false;
     },
-    updateImage(image) {
+    updateImage() {
       if (this.selectedRecord) {
         if (!shallowCompare(this.selectedRecord, this.selectedImage)) {
           this.$ls.set(this.selectedImage.id, this.selectedImage);
