@@ -1,0 +1,14 @@
+.inline-dl {
+  display: block;
+}
+.inline-dl dt {
+  display: inline-block;
+  padding-right: 0.25rem;
+}
+.inline-dl dd {
+  display: inline;
+}
+.inline-dl dd:not(:last-child)::after {
+  content: '\A';
+  white-space: pre;
+}

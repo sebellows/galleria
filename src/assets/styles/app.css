@@ -1,0 +1,12 @@
+@import './global.css';
+@import './animation.css';
+@import './button.css';
+@import './form.css';
+@import './layout.css';
+@import './text.css';
+@import './utils.css';
+
+.debug {
+  outline: 1px solid magenta;
+  outline-offset: -1px;
+}
