@@ -10,24 +10,23 @@ function chunk(arr, size) {
 
 module.exports = function filterPhotos(
   { photos: data },
-  { pageNumber = 1, limit = 8, ownername, title },
+  { pageNumber = 1, limit = 8, ...queries },
 ) {
-  let records = data.photo;
+  let results = data.photo;
 
   const intLimit = parseInt(limit, 10);
   const intOffset = parseInt(pageNumber - 1, 10);
+  const queryKeys = ['description', 'ownername', 'title'];
 
-  if (ownername) {
-    const ownerRE = new RegExp(ownername.toLowerCase(), 'i');
-    records = records.filter((photo) => ownerRE.test(photo.ownername));
+  for (const query in queries) {
+    if (queryKeys.includes(query)) {
+      const queryRE = new RegExp(queries[query].toLowerCase(), 'i');
+      results = results.filter((photo) => queryRE.test(photo[query]));
+    }
   }
 
-  if (title) {
-    const titleRE = new RegExp(title.toLowerCase(), 'i');
-    records = records.filter((photo) => titleRE.test(photo.title));
-  }
+  const pages = chunk(results, intLimit) || [];
+  const photos = chunk(results, intLimit)[intOffset];
 
-  const photos = chunk(records, intLimit)[intOffset];
-
-  return { totalPhotos: records.length, photos };
+  return { totalPhotos: results.length, pages: pages.length, photos };
 };

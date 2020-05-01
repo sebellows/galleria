@@ -5,15 +5,13 @@ module.exports = {
     node: true,
   },
 
-  extends: ['plugin:vue/essential', 'eslint:recommended', '@vue/prettier'],
-
   parserOptions: {
     parser: 'babel-eslint',
   },
 
   rules: {
-    'no-console': 'off',
-    'no-debugger': 'off',
+    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'vue/no-unused-vars': 'warn',
   },
 
@@ -26,5 +24,10 @@ module.exports = {
     },
   ],
 
-  extends: ['plugin:vue/essential', 'eslint:recommended', '@vue/prettier'],
+  extends: [
+    'plugin:vue/essential',
+    'eslint:recommended',
+    '@vue/prettier',
+    'plugin:prettier/recommended',
+  ],
 };

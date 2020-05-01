@@ -1,16 +1,16 @@
 <template>
   <transition name="mico-spinner" appear>
-    <div class="mico-spinner" :style="styles">
-      <div className="spinner-container">
-        <div className="spinner-layer">
-          <div className="spinner-circle-mask left">
-            <div className="spinner-circle" />
+    <div class="mico-spinner">
+      <div class="mico-spinner-container">
+        <div class="mico-spinner-layer">
+          <div class="mico-spinner-circle-mask left">
+            <div class="mico-spinner-circle" />
           </div>
-          <div className="spinner-circle-gap">
-            <div className="spinner-circle" />
+          <div class="mico-spinner-circle-gap">
+            <div class="mico-spinner-circle" />
           </div>
-          <div className="spinner-circle-mask right">
-            <div className="spinner-circle" />
+          <div class="mico-spinner-circle-mask right">
+            <div class="mico-spinner-circle" />
           </div>
         </div>
       </div>
@@ -43,7 +43,95 @@ export default {
 };
 </script>
 
-<style lang="postcss">
+<style>
+/** Animation */
+
+/* Dropdown transitions */
+@keyframes show {
+  0% {
+    transform: scaleY(0.1);
+  }
+  40% {
+    transform: scaleY(1.04);
+  }
+  60% {
+    transform: scaleY(0.98);
+  }
+  80% {
+    transform: scaleY(1.02);
+  }
+  100% {
+    transform: scaleY(1);
+  }
+}
+@keyframes hide {
+  0% {
+    transform: scaleY(1);
+  }
+  60% {
+    transform: scaleY(0.98);
+  }
+  80% {
+    transform: scaleY(1.02);
+  }
+  100% {
+    transform: scaleY(0);
+  }
+}
+@keyframes container-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes fill-unfill-rotate {
+  12.5% {
+    transform: rotate(135deg);
+  } /* 0.5 * ARCSIZE */
+  25% {
+    transform: rotate(270deg);
+  } /* 1   * ARCSIZE */
+  37.5% {
+    transform: rotate(405deg);
+  } /* 1.5 * ARCSIZE */
+  50% {
+    transform: rotate(540deg);
+  } /* 2   * ARCSIZE */
+  62.5% {
+    transform: rotate(675deg);
+  } /* 2.5 * ARCSIZE */
+  75% {
+    transform: rotate(810deg);
+  } /* 3   * ARCSIZE */
+  87.5% {
+    transform: rotate(945deg);
+  } /* 3.5 * ARCSIZE */
+  to {
+    transform: rotate(1080deg);
+  } /* 4   * ARCSIZE */
+}
+@keyframes left-spin {
+  from {
+    transform: rotate(130deg);
+  }
+  50% {
+    transform: rotate(-5deg);
+  }
+  to {
+    transform: rotate(130deg);
+  }
+}
+@keyframes right-spin {
+  from {
+    transform: rotate(-130deg);
+  }
+  50% {
+    transform: rotate(5deg);
+  }
+  to {
+    transform: rotate(-130deg);
+  }
+}
+
 .mico-spinner {
   display: inline-flex;
   justify-content: center;
@@ -70,16 +158,15 @@ export default {
 }
 .mico-spinner-enter-active,
 .mico-spinner-leave-active {
-  transition: opacity, transform $swift-ease-in-out-duration $swift-ease-in-out-timing-function;
+  transition: opacity, transform var(--ease-in-out-duration) var(--ease-in-out-timing-function);
 }
-.spinner-container {
+.mico-spinner-container {
   width: 100%;
   height: 100%;
   border-color: inherit;
-  /* duration: 360 * ARCTIME / (ARCSTARTROT + (360-ARCSIZE)) */
   animation: container-rotate 1568ms linear infinite;
 }
-.spinner-layer {
+.mico-spinner-layer {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -87,10 +174,9 @@ export default {
   border-color: inherit;
   white-space: nowrap;
   font-size: 0px;
-  /* durations: 4 * ARCTIME */
   animation: fill-unfill-rotate 5332ms var(--fast-out-slow-in-timing) infinite both;
 }
-.spinner-circle {
+.mico-spinner-circle {
   position: absolute;
   top: 0;
   left: 0;
@@ -104,20 +190,20 @@ export default {
   border-bottom-color: transparent !important;
   border-radius: 50%;
 }
-.spinner-circle-gap {
+.mico-spinner-circle-gap {
   position: absolute;
   top: 0;
   left: 45%;
-  width: 10%;
+  width: 0; /* was 10% */
   height: 100%;
   overflow: hidden;
   border-color: inherit;
 }
-.spinner-circle-gap .spinner-circle {
+.mico-spinner-circle-gap .spinner-circle {
   width: 1000%;
   left: -450%;
 }
-.spinner-circle-mask {
+.mico-spinner-circle-mask {
   display: inline-block;
   position: relative;
   width: 50%;
@@ -125,22 +211,21 @@ export default {
   overflow: hidden;
   border-color: inherit;
 }
-.spinner-circle-mask .spinner-circle {
+.mico-spinner-circle-mask .mico-spinner-circle {
   width: 200%;
 }
-.spinner-circle-mask.left .spinner-circle {
+.mico-spinner-circle-mask.left .mico-spinner-circle {
   border-right-color: transparent !important;
   transform: rotate(129deg);
   animation: left-spin 1333ms var(--fast-out-slow-in-timing) infinite both;
 }
-.spinner-circle-mask.right .spinner-circle {
+.mico-spinner-circle-mask.right .mico-spinner-circle {
   left: -100%;
   border-left-color: transparent !important;
   transform: rotate(-129deg);
   animation: right-spin 1333ms var(--fast-out-slow-in-timing) infinite both;
 }
-.mico-spinner.spinner-out {
-  /* duration: SHRINK_TIME */
+.mico-spinner.mico-spinner-out {
   animation: fade-out 400ms var(--fast-out-slow-in-timing) both;
 }
 </style>

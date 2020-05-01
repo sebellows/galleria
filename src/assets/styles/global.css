@@ -55,6 +55,7 @@
   --ease-in-duration: 0.3s;
   --ease-out-duration: 0.4s;
   --ease-in-out-duration: 0.5s;
+  --ease-in-out-timing-function: cubic-bezier(0.35, 0, 0.25, 1);
   --fast-out-slow-in-timing: cubic-bezier(0.4, 0, 0.2, 1);
   --linear-out-slow-in-timing: cubic-bezier(0, 0, 0.2, 0.1);
   --fast-out-linear-in-timing: cubic-bezier(0.4, 0, 1, 1);
@@ -400,7 +401,8 @@ legend {
   width: 100%;
   padding: 0;
   margin-bottom: var(--spacer-2);
-  font-size: 1.5rem;
+  font-size: 1rem;
+  font-weight: 700;
   line-height: inherit;
   color: inherit;
   white-space: normal;

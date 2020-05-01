@@ -4,8 +4,8 @@
     :class="{ [`justify-content-${align}`]: !!align }"
     :aria-label="ariaLabel"
   >
-    <ol v-show="pages.length > 1" class="pagination mb-0">
-      <li v-if="pages.length > 1" class="first" :class="{ disabled: currentPage === 1 }">
+    <ol v-show="pages.length > 0" class="pagination mb-0">
+      <li class="first" :class="{ disabled: currentPage === 1 }">
         <a
           class="page-link"
           href="#"
@@ -42,7 +42,7 @@
           <span v-if="currentPage === page" class="sr-only">(current)</span>
         </a>
       </li>
-      <li class="next" :class="{ disabled: currentPage === pages.length }">
+      <li class="next" :class="{ disabled: pages.length === 1 || currentPage === pages.length }">
         <a
           class="page-link"
           href="#"
@@ -54,7 +54,7 @@
           ›
         </a>
       </li>
-      <li v-if="pages.length > 1" class="last" :class="{ disabled: currentPage === pages.length }">
+      <li class="last" :class="{ disabled: pages.length === 1 || currentPage === pages.length }">
         <a
           class="page-link"
           href="#"
@@ -148,25 +148,33 @@ export default {
     };
   },
 
-  computed: {
-    pagePool() {
-      const result = Math.ceil(sanitizeTotalItems(this.totalItems) / sanitizePerPage(this.perPage));
-      return result < 1 ? [1] : range(1, result);
+  watch: {
+    totalItems(newVal, oldVal) {
+      if (oldVal != null && newVal !== oldVal) {
+        this.updatePages();
+      }
     },
   },
 
   mounted() {
-    if (this.pagePool.length > 0) {
-      if (this.pagePool.length > this.limit) {
-        const currentPage = this.currentPage > 0 ? this.currentPage - 1 : 0;
-        this.pages = this.pagePool.slice(currentPage, this.limit);
-      } else {
-        this.pages = this.pagePool.concat();
-      }
-    }
+    this.updatePages();
   },
 
   methods: {
+    updatePages() {
+      const result = Math.ceil(sanitizeTotalItems(this.totalItems) / sanitizePerPage(this.perPage));
+      console.log('updatePages', result);
+      this.pagePool = result < 1 ? [1] : range(1, result);
+
+      if (this.pagePool.length > 0) {
+        if (this.pagePool.length > this.limit) {
+          const currentPage = this.currentPage > 0 ? this.currentPage - 1 : 0;
+          this.pages = this.pagePool.slice(currentPage, this.limit);
+        } else {
+          this.pages = this.pagePool.concat();
+        }
+      }
+    },
     getPage($event, index) {
       $event.preventDefault();
 
