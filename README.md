@@ -2,6 +2,8 @@
 
 Paginated, filterable image gallery built with Vue.js/Vue-CLI and Express.
 
+![Galleria Screenshot](https://github.com/sebellows/galleria/blob/master/galleria.jpg)
+
 ## Project setup
 
 ```
